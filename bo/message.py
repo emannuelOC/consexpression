@@ -23,7 +23,7 @@ class Message(object):
         :param append:
         :return: void
         """
-        print ("********************************************\nError! The experiment don't have " + append + ".")
+        print ("********************************************\nError! The experiment doesn't have " + append + ".")
 
     def message_3(self, append):
         """
