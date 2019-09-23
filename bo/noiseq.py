@@ -3,6 +3,7 @@
 import rpy2.robjects as robjects
 from bo.message import Message
 from rpy2.rinterface import *
+from rpy2.rinterface_lib.embedded import RRuntimeError
 import warnings
 warnings.filterwarnings("ignore", category=RRuntimeWarning)
 
@@ -22,7 +23,7 @@ class Noiseq(object):
         self._replic = repl
         self._output = out
         self._message = Message()
-        self._likelihood_column = len(group) + 3
+        self._likelihood_column = len(set(group)) + 3
         self._likelihood = 0.95
 
     def run_de(self, gene):

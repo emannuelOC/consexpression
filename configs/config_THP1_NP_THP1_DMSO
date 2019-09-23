@@ -1,0 +1,11 @@
+
+#======== CONFIGURATION FILE
+#======== EXPERIMENT
+READS_DIRECTORY: /Users/emannuelcarvalho/Masters/data/experiments
+NAME: experiment_DMSO_NP_THP1.csv
+REPLIC: 1
+GROUP_NUMBER: 2
+GROUP_NAMES: THP1_DMSO,THP1_NP,THP1_DMSO,THP1_NP,THP1_NP
+REFERENCE_GENOME:
+THREADS: 6
+OUTPUT: /Users/emannuelcarvalho/Masters/consexpression/result_THP1_NP_THP1_DMSO

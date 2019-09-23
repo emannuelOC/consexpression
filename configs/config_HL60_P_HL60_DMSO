@@ -1,0 +1,11 @@
+
+#======== CONFIGURATION FILE
+#======== EXPERIMENT
+READS_DIRECTORY: /Users/emannuelcarvalho/Masters/data/experiments
+NAME: experiment_DMSO_P_HL60.csv
+REPLIC: 1
+GROUP_NUMBER: 2
+GROUP_NAMES: HL60_DMSO,HL60_DMSO,HL60_P,HL60_P,HL60_P
+REFERENCE_GENOME:
+THREADS: 6
+OUTPUT: /Users/emannuelcarvalho/Masters/consexpression/result_HL60_P_HL60_DMSO

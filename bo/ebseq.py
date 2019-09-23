@@ -2,6 +2,7 @@
 from bo.message import Message
 import rpy2.robjects as robjects
 from rpy2.rinterface import *
+from rpy2.rinterface_lib.embedded import RRuntimeError
 import warnings
 warnings.filterwarnings("ignore", category=RRuntimeWarning)
 

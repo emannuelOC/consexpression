@@ -47,6 +47,14 @@ class Experiment(object):
         self._limmavoom = None
 
 
+    def init_de_experiment(self, exp, file):
+        assert isinstance(exp, ExperimentDao)
+        self._exp_dao = exp
+        self._exp_dao.read_configuration_file(file)
+        self._exp_dao._name = self.name_valid(self._exp_dao._name)
+        self.rep_valid(self._exp_dao._replic)
+        self.group_number_valid(self._exp_dao._group_number)
+
 
     def init_experiment(self, exp, file):
         """
@@ -230,15 +238,16 @@ class Experiment(object):
             self.message.message_7("*Not found files FASTQ in directorie " + dir)
         return fastq_file
 
-    def execute_expression_analysis(self):
+    def execute_expression_analysis(self, de_only=False):
         """
         Make analysis with counts data for mapping
         :return:
         """
         print ("Expression analisys start...")
         n = "consexpression"
-        out_merge_table = self._exp_dao._read_directory + "/" + self._exp_dao._name + "_table_count.txt"
-        self.execute_merge_table(self._count_table, out_merge_table)
+        out_merge_table = self._exp_dao._read_directory + "/" + self._exp_dao._name + '.csv'
+        if not de_only:
+            self.execute_merge_table(self._count_table, out_merge_table)
         # 1 ------------------ edgeR -----------------
         out_edger = self._exp_dao._read_directory + "/" + self._exp_dao._name + "_edger.csv"
         self._edger = EdgeR(out_merge_table, self._exp_dao._group_name, self._exp_dao._replic, out_edger)
@@ -260,9 +269,9 @@ class Experiment(object):
         self._ebseq = Ebseq(out_merge_table, self._exp_dao._group_name, self._exp_dao._replic, out_ebseq)
         self._ebseq.run_ebseq()
         # 6 ------------- SAMSeq --------------------
-        out_samseq = self._exp_dao._read_directory + "/" + self._exp_dao._name + "_SAMSeq.csv"
-        self._samseq = SamSeq(out_merge_table, self._exp_dao._group_name, self._exp_dao._replic, out_samseq)
-        self._samseq.run_samseq()
+        # out_samseq = self._exp_dao._read_directory + "/" + self._exp_dao._name + "_SAMSeq.csv"
+        # self._samseq = SamSeq(out_merge_table, self._exp_dao._group_name, self._exp_dao._replic, out_samseq)
+        # self._samseq.run_samseq()
         # 7 ------------- limma-voom --------------------
         out_limmavoom = self._exp_dao._read_directory + "/" + self._exp_dao._name + "_limmavoom.csv"
         self._limmavoom = LimmaVoom(out_merge_table, self._exp_dao._group_name, self._exp_dao._replic, out_limmavoom)
@@ -270,19 +279,19 @@ class Experiment(object):
 
     def execute_conseus(self):
         gene_de = {}
-        read_bay = open(self._bayseq._output, 'r')
-        c_b = 0
-        for line in iter(read_bay):
-            if c_b > 0:
-                gene = line.split("\t")
-                v = self._bayseq.run_de(gene)
-                if gene[0] in gene_de:
-                    aux = gene_de[gene[0]]
-                    gene_de[gene[0]] = int(aux) + int(v)
-                else:
-                    gene_de[gene[0]] = int(v)
-            c_b += 1
-        read_bay.close()
+        # read_bay = open(self._bayseq._output, 'r')
+        # c_b = 0
+        # for line in iter(read_bay):
+        #     if c_b > 0:
+        #         gene = line.split("\t")
+        #         v = self._bayseq.run_de(gene)
+        #         if gene[0] in gene_de:
+        #             aux = gene_de[gene[0]]
+        #             gene_de[gene[0]] = int(aux) + int(v)
+        #         else:
+        #             gene_de[gene[0]] = int(v)
+        #     c_b += 1
+        # read_bay.close()
 
         # ---- edger
         read_edger = open(self._edger._output, 'r')
@@ -300,19 +309,19 @@ class Experiment(object):
         read_edger.close()
 
         #--- deseq
-        read_deseq = open(self._deseq._output, 'r')
-        c_b = 0
-        for line in iter(read_deseq):
-            if c_b > 0:
-                gene = line.split("\t")
-                v = self._deseq.run_de(gene)
-                if gene[1] in gene_de:
-                    aux = gene_de[gene[1]]
-                    gene_de[gene[1]] = int(aux) + int(v)
-                else:
-                    gene_de[gene[1]] = int(v)
-            c_b += 1
-        read_deseq.close()
+        # read_deseq = open(self._deseq._output, 'r')
+        # c_b = 0
+        # for line in iter(read_deseq):
+        #     if c_b > 0:
+        #         gene = line.split("\t")
+        #         v = self._deseq.run_de(gene)
+        #         if gene[1] in gene_de:
+        #             aux = gene_de[gene[1]]
+        #             gene_de[gene[1]] = int(aux) + int(v)
+        #         else:
+        #             gene_de[gene[1]] = int(v)
+        #     c_b += 1
+        # read_deseq.close()
 
         # --- noiseq
         read_noiseq = open(self._noiseq._output, 'r')
@@ -329,35 +338,35 @@ class Experiment(object):
             c_b += 1
         read_noiseq.close()
 
-        # --- samseq
-        read_samseq = open(self._samseq._output, 'r')
-        c_b = 0
-        for line in iter(read_samseq):
-            if c_b > 0:
-                gene = line.split("\t")
-                v = self._samseq.run_de(gene)
-                if gene[1] in gene_de:
-                    aux = gene_de[gene[1]]
-                    gene_de[gene[1]] = int(aux) + int(v)
-                else:
-                    gene_de[gene[1]] = int(v)
-            c_b += 1
-        read_samseq.close()
+        # # --- samseq
+        # read_samseq = open(self._samseq._output, 'r')
+        # c_b = 0
+        # for line in iter(read_samseq):
+        #     if c_b > 0:
+        #         gene = line.split("\t")
+        #         v = self._samseq.run_de(gene)
+        #         if gene[1] in gene_de:
+        #             aux = gene_de[gene[1]]
+        #             gene_de[gene[1]] = int(aux) + int(v)
+        #         else:
+        #             gene_de[gene[1]] = int(v)
+        #     c_b += 1
+        # read_samseq.close()
 
         # --- limma
-        read_limma = open(self._limmavoom._output, 'r')
-        c_b = 0
-        for line in iter(read_limma):
-            if c_b > 0:
-                gene = line.split("\t")
-                v = self._limmavoom.run_de(gene)
-                if gene[0] in gene_de:
-                    aux = gene_de[gene[0]]
-                    gene_de[gene[0]] = int(aux) + int(v)
-                else:
-                    gene_de[gene[0]] = int(v)
-            c_b += 1
-        read_limma.close()
+        # read_limma = open(self._limmavoom._output, 'r')
+        # c_b = 0
+        # for line in iter(read_limma):
+        #     if c_b > 0:
+        #         gene = line.split("\t")
+        #         v = self._limmavoom.run_de(gene)
+        #         if gene[0] in gene_de:
+        #             aux = gene_de[gene[0]]
+        #             gene_de[gene[0]] = int(aux) + int(v)
+        #         else:
+        #             gene_de[gene[0]] = int(v)
+        #     c_b += 1
+        # read_limma.close()
 
         # --- ebseq
         read_ebseq = open(self._ebseq._output, 'r')
@@ -375,13 +384,14 @@ class Experiment(object):
         read_ebseq.close()
 
         #--- write results
+        out = self._exp_dao._output
         header = 'gene, indications'
+        print('------->', out)
         out_cons = open(out, 'w')
         out_cons.write(header)
         names = gene_de.keys()
-        print(len(names))
         for i in iter(names):
-            if (gene_de[i]) >= 4:
+            if (gene_de[i]) >= 1:
                 out_cons.write("\n" + i + "," + str(gene_de[i]))
 
     def execute_merge_table(self, out_mapp_list, out_name):
@@ -396,9 +406,17 @@ class Experiment(object):
 if __name__ == "__main__":
     expBo = Experiment()
     config_file = sys.argv[1]
+    if len(sys.argv) == 3:
+        de_flag = sys.argv[2]
+
     exp_d = ExperimentDao()
-    expBo.init_experiment(exp_d, config_file)
-    if(exp_d._reference == ""):
-        expBo.exceute_mapp_count()
-    expBo.execute_expression_analysis()
-    expBo.execute_conseus('consensus.txt')
+    if de_flag == 'DE':
+        expBo.init_de_experiment(exp_d, config_file)
+        expBo.execute_expression_analysis(True)
+        expBo.execute_conseus()
+    else:
+        expBo.init_experiment(exp_d, config_file)
+        if(exp_d._reference == ""):
+            expBo.exceute_mapp_count()
+        expBo.execute_expression_analysis()
+        expBo.execute_conseus('consensus.txt')

@@ -1,0 +1,11 @@
+
+#======== CONFIGURATION FILE
+#======== EXPERIMENT
+READS_DIRECTORY: /Users/emannuelcarvalho/Masters/data/experiments
+NAME: experiment_DMSO_NP_OCI-2.csv
+REPLIC: 1
+GROUP_NUMBER: 2
+GROUP_NAMES: OCI-2_DMSO,OCI-2_NP,OCI-2_NP
+REFERENCE_GENOME:
+THREADS: 6
+OUTPUT: /Users/emannuelcarvalho/Masters/consexpression/result_OCI-2_DMSO_OCI-2_NP

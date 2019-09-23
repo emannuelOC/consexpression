@@ -1,0 +1,10 @@
+#======== CONFIGURATION FILE
+#======== EXPERIMENT
+READS_DIRECTORY: /Users/emannuelcarvalho/Masters/data/experiments
+NAME: experiment_DMSO_N
+REPLIC: 1
+GROUP_NUMBER: 2
+GROUP_NAMES: DMSO,N,DMSO,N,DMSO,DMSO,DMSO,N,DMSO,N,N,N,N,N,N
+REFERENCE_GENOME:
+THREADS: 6
+OUTPUT: /Users/emannuelcarvalho/Masters/consexpression/result
